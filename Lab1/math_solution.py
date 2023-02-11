@@ -40,4 +40,3 @@ def gauss_method_solution(matrix_list):
         x[i] = (f[i] - s) / matrix[i][i]
 
     return x
-

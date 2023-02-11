@@ -29,7 +29,7 @@ def fill_matrix_from_console():
         size = int(input())
         print("Введите матрицу построчно (разделитель - пробел). Чтобы закончить ввод, нажмите Enter: ")
         matrix = []
-        for i in range(size):
+        for _ in range(size):
             row = input()
             row = list(map(float, row.split(" ")))
             if len(row) != size:
@@ -41,7 +41,7 @@ def fill_matrix_from_console():
         if len(f) != size:
             print("Количество свободных членов больше размерности матрицы. Попробуйте еще раз.")
             return fill_matrix_from_console()
-    except Exception as e:
+    except Exception:
         print("Ввод некорректен, попробуйте снова: ")
         return fill_matrix_from_console()
     return [matrix, f]
@@ -56,6 +56,6 @@ def get_matrix_from_file(filename):
                 del el[len(matrix)]
 
             return [matrix, f]
-    except Exception as e:
+    except Exception:
         print("Данные в файле некорректны или его не существует. Попробуйте еще раз. ")
         return user_input()
