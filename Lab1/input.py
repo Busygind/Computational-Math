@@ -39,7 +39,7 @@ def fill_matrix_from_console():
         print("Введите свободные члены (через пробел):")
         f = list(map(float, input().split(" ")))
         if len(f) != size:
-            print("Количество свободных членов больше размерности матрицы. Попробуйте еще раз.")
+            print("Количество свободных членов не равно размерности матрицы. Попробуйте еще раз.")
             return fill_matrix_from_console()
     except Exception:
         print("Ввод некорректен, попробуйте снова: ")
@@ -54,7 +54,10 @@ def get_matrix_from_file(filename):
             f = get_column(matrix, len(matrix))
             for el in matrix:
                 del el[len(matrix)]
-
+            for el in matrix:
+                if len(matrix) != len(el):
+                    print("Матрица должна быть квадратной. Попробуйте еще раз. ")
+                    return user_input()
             return [matrix, f]
     except Exception:
         print("Данные в файле некорректны или его не существует. Попробуйте еще раз. ")
