@@ -1,13 +1,26 @@
-def swap_lines(matrix, f):
-    for i in range(len(matrix) - 1):
-        if matrix[i][i] == 0:
-            buf = matrix[i]
-            matrix[i] = matrix[i + 1]
-            matrix[i + 1] = buf
-            buf = f[i]
-            f[i] = f[i + 1]
-            f[i + 1] = buf
-    return [matrix, f]
+# def swap_lines(matrix, f):
+#     for i in range(len(matrix) - 1):
+#         if matrix[i][i] == 0:
+#             buf = matrix[i]
+#             matrix[i] = matrix[i + 1]
+#             matrix[i + 1] = buf
+#             buf = f[i]
+#             f[i] = f[i + 1]
+#             f[i + 1] = buf
+#     return [matrix, f]
+
+import sys
+
+def swap_lines(matrix, i, f):
+    for j in range(i + 1, len(matrix)):
+        if matrix[j][i] != 0:
+            # print_matrix(f"matrix before swap line i={i} and line j={j}", matrix)
+            matrix[j], matrix[i] = matrix[i], matrix[j]
+            f[j], f[i] = f[i], f[j]
+            # print_matrix(f"matrix after swap line i={i} and line j={j}", matrix)
+            return [matrix, f]
+    print("У матрицы нет уникальных решений!")
+    sys.exit(0)
 
 
 def print_matrix(matrix, f):
@@ -23,7 +36,8 @@ def gauss_method_solution(matrix_list):
     n = len(matrix)
     f = matrix_list[1]
     for i in range(n - 1):
-        [matrix, f] = swap_lines(matrix, f)
+        if matrix[i][i] == 0:
+            [matrix, f] = swap_lines(matrix, i, f)
         for k in range(i+1, n):
             c = matrix[k][i]/matrix[i][i]
             matrix[k][i] = 0
@@ -37,6 +51,9 @@ def gauss_method_solution(matrix_list):
         s = 0
         for j in range(i + 1, n):
             s = s + matrix[i][j] * x[j]
+        if matrix[i][i] == 0:
+            print("У матрицы нет уникальных решений!")
+            sys.exit(0)
         x[i] = (f[i] - s) / matrix[i][i]
 
     return x

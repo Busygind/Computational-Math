@@ -5,6 +5,8 @@ from discrepancies import *
 
 greet()
 [matrix, f] = user_input()
+print("------------------------------------------------")
+print("Исходная матрица: ")
 print_matrix(matrix, f)
 buf_matrix = []
 for i in range(len(matrix)):
