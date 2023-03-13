@@ -27,13 +27,14 @@ def f(x):
     return x ** 3 - x + 4
 
 
-x0 = -1.5
-x1 = -2
+if __name__ == '__main__':
+    x0 = -1.5
+    x1 = -2
 
-solution, no_iterations = secant(f, x0, x1, eps=0.01)
+    solution, no_iterations = secant(f, x0, x1, eps=0.01)
 
-if no_iterations > 0:  # Solution found
-    print("Number of function calls: %d" % (2 + no_iterations))
-    print("A solution is: %f" % (solution))
-else:
-    print("Solution not found!")
+    if no_iterations > 0:  # Solution found
+        print("Number of function calls: %d" % (2 + no_iterations))
+        print("A solution is: %f" % (solution))
+    else:
+        print("Solution not found!")
