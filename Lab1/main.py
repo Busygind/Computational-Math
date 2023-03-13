@@ -19,5 +19,5 @@ for i in range(len(x)):
     print("x[", i+1, "] =", round(x[i], 5))
 print("------------------------------------------------")
 for i in range(len(dis)):
-    print("r[", i+1, "] =", round(dis[i], 10))
+    print("r[", i+1, "] =", round(dis[i], 20))
 print("------------------------------------------------")

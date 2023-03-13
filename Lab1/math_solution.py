@@ -11,6 +11,7 @@
 
 import sys
 
+
 def swap_lines(matrix, i, f):
     for j in range(i + 1, len(matrix)):
         if matrix[j][i] != 0:
@@ -31,13 +32,22 @@ def print_matrix(matrix, f):
     print("------------------------------------------------")
 
 
+def det_calc(matrix, k):
+    det = -1 ** k
+    for i in range(len(matrix)):
+        det *= matrix[i][i]
+    return det
+
+
 def gauss_method_solution(matrix_list):
     matrix = matrix_list[0]
     n = len(matrix)
     f = matrix_list[1]
+    swaps = 0
     for i in range(n - 1):
         if matrix[i][i] == 0:
             [matrix, f] = swap_lines(matrix, i, f)
+            swaps += 1
         for k in range(i+1, n):
             c = matrix[k][i]/matrix[i][i]
             matrix[k][i] = 0
@@ -55,5 +65,6 @@ def gauss_method_solution(matrix_list):
             print("У матрицы нет уникальных решений!")
             sys.exit(0)
         x[i] = (f[i] - s) / matrix[i][i]
-
+    print("Определитель матрицы: ", det_calc(matrix, swaps))
+    print("------------------------------------------------")
     return x
