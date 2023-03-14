@@ -1,26 +1,11 @@
 from equation_system import *
 from symengine import *
-from sympy import plot_implicit, Add, Mul, nsolve
+from sympy import Add, Mul, nsolve
+from plotter import plot_system
 
 
-def string2func(s):
-    def func(x, y):
-        return eval(s)
-
-    return func
-
-def plot(system):
-    x, y = symbols('x y')
-    f = sympify(system.funcs[0])
-    g = sympify(system.funcs[1])
-    p = plot_implicit(f, (x, -10, 10), (y, -10, 10), show=False, line_color='r')
-    p2 = plot_implicit(g, (x, -10, 10), (y, -10, 10), show=False)
-    p.extend(p2)
-    p.show()
-
-
-def newtons_method(system):
-    ksi = 0.01
+def newtons_method(system, a, b, eps):
+    ksi = eps
     vars = symbols('x y')
     f = sympify([elem for elem in system.funcs])
     J = zeros(len(f), len(vars))
@@ -28,16 +13,15 @@ def newtons_method(system):
         for j, s in enumerate(vars):
             J[i, j] = diff(fi, s)
     dx, dy = symbols('dx dy')
-    # plot(system)
     J[0] = Mul(J[0], dx)
     J[1] = Mul(J[1], dy)
     J[2] = Mul(J[2], dx)
     J[3] = Mul(J[3], dy)
     first = Add(J[0], J[1])
     second = Add(J[2], J[3])
-    x0 = 1
-    y0 = 2
-    found = false
+    x0 = a
+    y0 = b
+    found = False
     f[0] = Mul(f[0], -1)
     f[1] = Mul(f[1], -1)
     xAns = 0
@@ -58,10 +42,11 @@ def newtons_method(system):
         ans = nsolve((firstTemp, secondTemp), (dx, dy), (0, 0))
         x1, y1 = x0 + float(ans[0]), y0 + float(ans[1])
         if abs(x1 - x0) <= ksi and abs(y1 - y0) <= ksi:
-            found, xAns, yAns = true, x1, y1
+            found, xAns, yAns = True, x1, y1
         else:
             x0, y0 = x1, y1
-    print_ans([xAns, yAns], k, [0,0])
+    plot_system(system, -a, a, -b, b)
+    return [xAns, yAns], k, [xAns - x0, yAns - y0]
 
 def print_ans(ansVector, k, errorsVector):
     print("Вектор неизвестных: ")
@@ -72,5 +57,5 @@ def print_ans(ansVector, k, errorsVector):
     print(errorsVector)
 
 if __name__ == '__main__':
-    system = EquationSystem("y ** 2 + x ** 2 - 4", "-3 * x ** 2 + y")
+    system = EquationSystem("sin(x) - y", "cos(x) - y")
     newtons_method(system)

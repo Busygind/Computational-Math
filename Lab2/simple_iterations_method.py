@@ -1,34 +1,35 @@
 import numpy as np
-import math
-from typing import Callable
-from sys import exit
+from sympy import sympify, symbols, diff, Mul, Add
 
 
-def simple_iteration_method(phi: Callable, phi_derivative: Callable, interval: tuple, eps: float) -> list:
-    ''' Find a root of a non-linear equation using the simple iteration method.
-        Returns an approximate root of the equation and the number of iterations.'''
+#Returns NONE если интервал выбран неграмотно
+def simple_iteration_method(func, a0, b0, eps):
+    x = symbols('x')
+    f = sympify(func)
+    df = diff(f)
+    l = -1 / max([abs(float(df.subs(x, xt))) for xt in np.arange(a0, b0, eps)])
 
-    q = max([abs(phi_derivative(x)) for x in np.arange(interval[0], interval[1], eps)])
+    phi = Mul(f, l)
+    phi = Add(phi, x)
+    dphi = diff(phi)
+    q = max([abs(float(dphi.subs(x, xt))) for xt in np.arange(a0, b0, eps)])
     if q >= 1:
-        print('The function doesn\'t meet the second condition of convergence.')
-        exit()
+        return "q >= 1, границы интервала выбраны некорректно"
 
-    x_prev = (interval[0] + interval[1]) / 2
-    x_cur = phi(x_prev)
+    x_prev = (a0 + b0) / 2
+    x_cur = float(phi.subs(x, x_prev))
 
     iters = 0
     while q / (1 - q) * abs(x_cur - x_prev) >= eps:
         x_prev = x_cur
-        x_cur = phi(x_prev)
+        x_cur = float(phi.subs(x, x_prev))
         iters += 1
 
-    return x_cur, iters
+    return x_cur, float(f.subs(x, x_cur)), iters
 
 
 if __name__ == '__main__':
-    phi = lambda x: math.sqrt((math.sin(x) + 0.5) / 2)
-    phi_derivative = lambda x: math.cos(x) / (4 * math.sqrt((math.sin(x) + 0.5) / 2))
-    eps = 0.0000001
-    interval = (0.75, 0.8)
-    root, iter_count = simple_iteration_method(phi, phi_derivative, interval, eps)
+    eps = 0.01
+    interval = (-10, 100)
+    root, iter_count = simple_iteration_method("x ** 3 - x + 4", interval, eps)
     print(f'Root: {root}, iterations: {iter_count}')
